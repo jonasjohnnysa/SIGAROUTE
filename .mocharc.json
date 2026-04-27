@@ -1,0 +1,11 @@
+{
+  "require": ["test/setup.js"],
+  "reporter": "mochawesome",
+  "reporter-options": [
+    "reportDir=./mochawesome-report",
+    "reportFilename=report.html",
+    "reportTitle=SIGAROUTE Test Report"
+  ],
+  "timeout": 5000,
+  "exit": true
+}

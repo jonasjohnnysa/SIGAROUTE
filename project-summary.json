@@ -1,0 +1,97 @@
+{
+  "projectName": "SIGAROUTE",
+  "description": "Sistema de Gerenciamento de Rotas e Endereços",
+  "version": "1.0.0",
+  "architecture": "Clean Architecture",
+  "stack": {
+    "runtime": "Node.js",
+    "framework": "Express.js",
+    "language": "JavaScript",
+    "storage": "In-Memory (Array/Push)"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express-validator": "^7.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "folders": {
+    "models": "Definem estrutura de dados das entidades",
+    "repositories": "Gerenciam acesso aos dados em memória",
+    "services": "Contêm lógica de negócio e validações",
+    "controllers": "Handlers de requisições HTTP",
+    "routes": "Definem endpoints da API",
+    "middlewares": "Error handler e validações globais",
+    "utils": "Validadores e formatadores reutilizáveis"
+  },
+  "entities": {
+    "Endereco": {
+      "fields": ["id", "rua", "numero", "bairro", "cidade", "estado", "cep", "ativo", "dataCriacao", "dataAtualizacao"],
+      "crudComplete": true
+    },
+    "Rota": {
+      "fields": ["id", "nome", "descricao", "enderecosIds[]", "destinatariosIds[]", "status", "dataCriacao", "dataAtualizacao"],
+      "crudComplete": true,
+      "extra": ["adicionarEndereco", "removerEndereco", "adicionarDestinatario", "removerDestinatario"]
+    },
+    "Destinatario": {
+      "fields": ["id", "nome", "email", "telefone", "endereco", "ativo", "dataCriacao", "dataAtualizacao"],
+      "crudComplete": true
+    }
+  },
+  "endpoints": {
+    "health": "GET /health",
+    "enderecos": {
+      "create": "POST /api/enderecos",
+      "list": "GET /api/enderecos",
+      "getById": "GET /api/enderecos/:id",
+      "listByCity": "GET /api/enderecos/cidade",
+      "update": "PUT /api/enderecos/:id",
+      "delete": "DELETE /api/enderecos/:id",
+      "disable": "PATCH /api/enderecos/:id/desativar"
+    },
+    "rotas": {
+      "create": "POST /api/rotas",
+      "list": "GET /api/rotas",
+      "getById": "GET /api/rotas/:id",
+      "listByStatus": "GET /api/rotas/status",
+      "update": "PUT /api/rotas/:id",
+      "delete": "DELETE /api/rotas/:id",
+      "disable": "PATCH /api/rotas/:id/desativar",
+      "addEndereco": "POST /api/rotas/endereco/adicionar",
+      "removeEndereco": "POST /api/rotas/endereco/remover",
+      "addDestinatario": "POST /api/rotas/destinatario/adicionar",
+      "removeDestinatario": "POST /api/rotas/destinatario/remover"
+    },
+    "destinatarios": {
+      "create": "POST /api/destinatarios",
+      "list": "GET /api/destinatarios",
+      "getById": "GET /api/destinatarios/:id",
+      "getByEmail": "GET /api/destinatarios/email",
+      "searchByName": "GET /api/destinatarios/busca/nome",
+      "update": "PUT /api/destinatarios/:id",
+      "delete": "DELETE /api/destinatarios/:id",
+      "disable": "PATCH /api/destinatarios/:id/desativar"
+    }
+  },
+  "validations": {
+    "Endereco": ["CEP (XXXXX-XXX)", "Estado (sigla válida)", "Todos campos obrigatórios"],
+    "Destinatario": ["Email válido", "Telefone (10-11 dígitos)", "Email único", "Todos campos obrigatórios"],
+    "Rota": ["Status válido (ativa, inativa, pausada)", "Endereços/Destinatários devem existir"]
+  },
+  "commands": {
+    "install": "npm install",
+    "dev": "npm run dev",
+    "start": "npm start"
+  },
+  "notes": [
+    "Dados armazenados em memória - perdidos ao reiniciar",
+    "Arquitetura pronta para migração para banco de dados",
+    "Validações de negócio centralizadas nos Services",
+    "Tratamento de erros global com middleware",
+    "Resposta padronizada para sucesso/erro"
+  ]
+}

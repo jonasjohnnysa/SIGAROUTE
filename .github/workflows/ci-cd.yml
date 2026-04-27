@@ -1,0 +1,67 @@
+name: CI / CD
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+  deploy:
+    name: Deploy on push to main
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 18.x
+
+      - name: Prepare deployment environment
+        run: npm ci --production
+
+      - name: Deploy to remote server via SSH
+        if: ${{ secrets.SSH_HOST != '' && secrets.SSH_USERNAME != '' && secrets.SSH_PRIVATE_KEY != '' }}
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            cd /var/www/sigaroute || exit 1
+            git pull origin main || git pull origin master
+            npm install --production
+            npx pm2 restart sigaroute || npx pm2 start server.js --name sigaroute
+
+      - name: Skip deploy if SSH secrets are missing
+        if: ${{ secrets.SSH_HOST == '' || secrets.SSH_USERNAME == '' || secrets.SSH_PRIVATE_KEY == '' }}
+        run: |
+          echo "SSH deploy secrets are not configured."
+          echo "Add SSH_HOST, SSH_USERNAME and SSH_PRIVATE_KEY to repository secrets to enable automatic deploy."
