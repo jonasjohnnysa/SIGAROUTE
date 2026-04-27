@@ -29,11 +29,52 @@ jobs:
       - name: Run tests
         run: npm test
 
-  deploy:
-    name: Deploy on push to main
+  verify-server:
+    name: Verify remote server
     needs: test
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify remote server configuration
+        if: ${{ env.SSH_HOST != '' && env.SSH_USERNAME != '' && env.SSH_PRIVATE_KEY != '' }}
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT || 22 }}
+          script: |
+            echo "Verificando servidor remoto..."
+            test -d /var/www/sigaroute || exit 1
+            command -v git >/dev/null 2>&1 || exit 1
+            command -v npm >/dev/null 2>&1 || exit 1
+            command -v pm2 >/dev/null 2>&1 || exit 1
+            echo "Servidor configurado corretamente."
+
+      - name: Skip server verification if SSH secrets are missing
+        if: ${{ env.SSH_HOST == '' || env.SSH_USERNAME == '' || env.SSH_PRIVATE_KEY == '' }}
+        run: |
+          echo "SSH deploy secrets are not configured."
+          echo "Add SSH_HOST, SSH_USERNAME and SSH_PRIVATE_KEY to repository secrets to enable deployment."
+
+  deploy:
+    name: Deploy on push to main
+    needs: verify-server
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -47,21 +88,14 @@ jobs:
         run: npm ci --production
 
       - name: Deploy to remote server via SSH
-        if: ${{ secrets.SSH_HOST != '' && secrets.SSH_USERNAME != '' && secrets.SSH_PRIVATE_KEY != '' }}
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USERNAME }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT || 22 }}
           script: |
             cd /var/www/sigaroute || exit 1
             git pull origin main || git pull origin master
             npm install --production
-            npx pm2 restart sigaroute || npx pm2 start server.js --name sigaroute
-
-      - name: Skip deploy if SSH secrets are missing
-        if: ${{ secrets.SSH_HOST == '' || secrets.SSH_USERNAME == '' || secrets.SSH_PRIVATE_KEY == '' }}
-        run: |
-          echo "SSH deploy secrets are not configured."
-          echo "Add SSH_HOST, SSH_USERNAME and SSH_PRIVATE_KEY to repository secrets to enable automatic deploy."
+            npx pm2 restart sigaroute || npx pm2 start server.js --name sigaroute --update-env
