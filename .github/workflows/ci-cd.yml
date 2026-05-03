@@ -35,6 +35,10 @@ jobs:
 
       - name: Run tests
         run: npm test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_secret_key_sigaroute_2024' }}
+          JWT_EXPIRES_IN: 24h
+          NODE_ENV: test
 
       - name: Upload Mocha test report
         uses: actions/upload-artifact@v4
