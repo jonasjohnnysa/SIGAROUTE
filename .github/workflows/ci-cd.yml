@@ -59,7 +59,7 @@ jobs:
           path: mochawesome-report
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./mochawesome-report
@@ -98,7 +98,7 @@ jobs:
 
       - name: Verify remote server configuration
         if: ${{ env.SSH_HOST != '' && env.SSH_USERNAME != '' && env.SSH_PRIVATE_KEY != '' }}
-        uses: appleboy/ssh-action@v0.1.7
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USERNAME }}
@@ -141,7 +141,7 @@ jobs:
         run: npm ci --production
 
       - name: Deploy to remote server via SSH
-        uses: appleboy/ssh-action@v0.1.7
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USERNAME }}
