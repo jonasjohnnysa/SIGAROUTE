@@ -79,7 +79,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Test report generated. Download from [Actions Artifacts](${context.payload.repository.html_url}/actions/runs/${context.runId}).'
+              body: '✅ Test report generated successfully!\n\n📊 **Download the Mochawesome report:**\nGo to the [Actions tab](${context.payload.repository.html_url}/actions/runs/${context.runId}) and download the `mocha-report` artifact.'
             })
 
   verify-server:
