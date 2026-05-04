@@ -80,7 +80,9 @@ class AuthService {
   gerarToken(payload) {
     const secret = process.env.JWT_SECRET;
     const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
-
+    if (!secret) {
+      throw new Error('JWT_SECRET não definido. Configure a variável de ambiente JWT_SECRET.');
+    }
     return jwt.sign(payload, secret, { expiresIn });
   }
 
@@ -91,7 +93,9 @@ class AuthService {
    */
   verificarToken(token) {
     const secret = process.env.JWT_SECRET;
-
+    if (!secret) {
+      throw new Error('JWT_SECRET não definido. Configure a variável de ambiente JWT_SECRET.');
+    }
     try {
       return jwt.verify(token, secret);
     } catch (error) {

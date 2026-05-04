@@ -1,3 +1,4 @@
+require('../setup');
 const { expect } = require('chai');
 const AuthService = require('../../src/services/AuthService');
 

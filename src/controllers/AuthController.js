@@ -15,7 +15,18 @@ class AuthController {
         });
       }
 
-      const resultado = authService.login(usuario, senha);
+      let resultado;
+      try {
+        resultado = authService.login(usuario, senha);
+      } catch (err) {
+        if (err.message === 'Credenciais inválidas') {
+          return res.status(401).json({
+            success: false,
+            error: err.message
+          });
+        }
+        throw err;
+      }
 
       return res.status(200).json({
         success: true,

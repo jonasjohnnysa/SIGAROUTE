@@ -138,11 +138,11 @@ describe('Destinatario Routes - Integration Tests', () => {
     });
   });
 
-  describe('GET /destinatarios/:id', () => {
+  describe('GET /api/destinatarios/:id', () => {
     it('deve retornar um destinatário por ID', (done) => {
       // Criar um destinatário
       request(app)
-        .post('/destinatarios')
+        .post('/api/destinatarios')
         .set('Authorization', `Bearer ${getAuthToken()}`)
         .send({
           nome: 'João Silva',
@@ -190,7 +190,7 @@ describe('Destinatario Routes - Integration Tests', () => {
     it('deve atualizar um destinatário existente', (done) => {
       // Criar um destinatário
       request(app)
-        .post('/destinatarios')
+        .post('/api/destinatarios')
         .set('Authorization', `Bearer ${getAuthToken()}`)
         .send({
           nome: 'João Silva',
@@ -228,7 +228,7 @@ describe('Destinatario Routes - Integration Tests', () => {
     it('deve deletar um destinatário existente', (done) => {
       // Criar um destinatário
       request(app)
-        .post('/destinatarios')
+        .post('/api/destinatarios')
         .set('Authorization', `Bearer ${getAuthToken()}`)
         .send({
           nome: 'João Silva',

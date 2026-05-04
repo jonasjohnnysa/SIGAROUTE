@@ -239,7 +239,7 @@ describe('Rota Routes - Integration Tests', () => {
     it('deve adicionar um endereço a uma rota', (done) => {
       // Criar endereço
       request(app)
-        .post('/enderecos')
+        .post('/api/enderecos')
         .set('Authorization', `Bearer ${getAuthToken()}`)
         .send({
           rua: 'Rua A',
@@ -256,7 +256,7 @@ describe('Rota Routes - Integration Tests', () => {
 
           // Criar rota
           request(app)
-            .post('/rotas')
+            .post('/api/rotas')
             .set('Authorization', `Bearer ${getAuthToken()}`)
             .send({
               nome: 'Rota Teste',
@@ -269,7 +269,8 @@ describe('Rota Routes - Integration Tests', () => {
 
               // Adicionar endereço à rota
               request(app)
-                .post(`/api/rotas/${rotaId}/enderecos/${enderecoId}`)
+                .post('/api/rotas/endereco/adicionar')
+                .send({ rotaId, enderecoId })
                 .set('Authorization', `Bearer ${getAuthToken()}`)
                 .expect(200)
                 .end((err, res) => {
@@ -288,7 +289,7 @@ describe('Rota Routes - Integration Tests', () => {
     it('deve adicionar um destinatário a uma rota', (done) => {
       // Criar destinatário
       request(app)
-        .post('/destinatarios')
+        .post('/api/destinatarios')
         .set('Authorization', `Bearer ${getAuthToken()}`)
         .send({
           nome: 'João Silva',
@@ -303,7 +304,7 @@ describe('Rota Routes - Integration Tests', () => {
 
           // Criar rota
           request(app)
-            .post('/rotas')
+            .post('/api/rotas')
             .set('Authorization', `Bearer ${getAuthToken()}`)
             .send({
               nome: 'Rota Teste',
@@ -316,7 +317,8 @@ describe('Rota Routes - Integration Tests', () => {
 
               // Adicionar destinatário à rota
               request(app)
-                .post(`/api/rotas/${rotaId}/destinatarios/${destinatarioId}`)
+                .post('/api/rotas/destinatario/adicionar')
+                .send({ rotaId, destinatarioId })
                 .set('Authorization', `Bearer ${getAuthToken()}`)
                 .expect(200)
                 .end((err, res) => {

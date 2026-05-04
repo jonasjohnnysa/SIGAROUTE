@@ -8,7 +8,8 @@
     "dev": "nodemon server.js",
     "test": "mocha test/**/*.test.js --reporter mochawesome --reporter-options reportDir=./mochawesome-report,reportFilename=report.html",
     "test:watch": "mocha test/**/*.test.js --watch",
-    "test:coverage": "nyc mocha test/**/*.test.js"
+    "test:coverage": "nyc mocha test/**/*.test.js",
+    "test:versioned": "node scripts/generate-versioned-report.js"
   },
   "keywords": [
     "rotas",

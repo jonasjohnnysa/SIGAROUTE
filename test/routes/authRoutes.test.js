@@ -16,7 +16,7 @@ describe('Auth Routes - Integration Tests', () => {
           if (err) return done(err);
 
           expect(res.body).to.have.property('success', true);
-          expect(res.body).to.have.property('token');
+          expect(res.body.data).to.have.property('token');
           expect(res.body.data).to.have.property('usuario');
           expect(res.body.data.usuario.usuario).to.equal('admin');
           expect(res.body.data.usuario.role).to.equal('admin');
@@ -37,7 +37,7 @@ describe('Auth Routes - Integration Tests', () => {
           if (err) return done(err);
 
           expect(res.body).to.have.property('success', true);
-          expect(res.body).to.have.property('token');
+            expect(res.body.data).to.have.property('token');
           expect(res.body.data.usuario.role).to.equal('user');
 
           done();
@@ -56,7 +56,7 @@ describe('Auth Routes - Integration Tests', () => {
           if (err) return done(err);
 
           expect(res.body).to.have.property('success', false);
-          expect(res.body).to.have.property('message');
+          expect(res.body).to.have.property('error');
 
           done();
         });
@@ -147,10 +147,10 @@ describe('Auth Routes - Integration Tests', () => {
     });
   });
 
-  describe('GET /auth/profile', () => {
+  describe('GET /auth/perfil', () => {
     it('deve retornar perfil do usuário autenticado', (done) => {
       request(app)
-        .get('/auth/profile')
+        .get('/auth/perfil')
         .set('Authorization', `Bearer ${getValidToken()}`)
         .expect(200)
         .end((err, res) => {
@@ -166,7 +166,7 @@ describe('Auth Routes - Integration Tests', () => {
 
     it('deve retornar erro sem token', (done) => {
       request(app)
-        .get('/auth/profile')
+        .get('/auth/perfil')
         .expect(401)
         .end((err, res) => {
           if (err) return done(err);
