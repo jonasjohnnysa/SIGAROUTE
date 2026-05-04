@@ -85,7 +85,7 @@ const options = {
           required: ['usuario', 'senha'],
           properties: {
             usuario: { type: 'string', example: 'admin' },
-            senha: { type: 'string', example: 'admin@123' }
+            senha: { type: 'string', example: 'sua_senha_aqui' }
           }
         },
         LoginResponse: {

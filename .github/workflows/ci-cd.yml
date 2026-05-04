@@ -44,6 +44,8 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_secret_key_sigaroute_2024' }}
           JWT_EXPIRES_IN: 24h
           NODE_ENV: test
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD || 'admin@123' }}
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD || 'user@123' }}
 
       - name: Upload Mocha test report
         uses: actions/upload-artifact@v4

@@ -9,7 +9,7 @@ describe('Auth Routes - Integration Tests', () => {
         .post('/auth/login')
         .send({
           usuario: 'admin',
-          senha: 'admin@123'
+          senha: process.env.ADMIN_PASSWORD || 'admin@123'
         })
         .expect(200)
         .end((err, res) => {
@@ -30,14 +30,14 @@ describe('Auth Routes - Integration Tests', () => {
         .post('/auth/login')
         .send({
           usuario: 'jonas.arruda',
-          senha: 'user@123'
+          senha: process.env.USER_PASSWORD || 'user@123'
         })
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
 
           expect(res.body).to.have.property('success', true);
-            expect(res.body.data).to.have.property('token');
+          expect(res.body.data).to.have.property('token');
           expect(res.body.data.usuario.role).to.equal('user');
 
           done();

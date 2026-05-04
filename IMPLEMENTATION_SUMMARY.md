@@ -15,8 +15,8 @@ Implementado com sucesso!
 ✅ Verificação e validação de tokens
 ✅ Proteção de rotas com middleware JWT
 ✅ 2 usuários pré-definidos:
-  - admin / admin@123 (role: admin)
-  - jonas.arruda / user@123 (role: user)
+  - admin (senha definida via env ADMIN_PASSWORD, role: admin)
+  - jonas.arruda (senha definida via env USER_PASSWORD, role: user)
 
 ### Endpoints:
 - `POST /auth/login` - Fazer login
@@ -155,7 +155,7 @@ npm run dev
 ```bash
 curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"usuario":"admin","senha":"admin@123"}'
+  -d '{"usuario":"admin","senha":"SUA_SENHA_AQUI"}'
 ```
 
 ### 4. Usar token nas requisições:

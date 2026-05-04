@@ -5,7 +5,7 @@ const AuthService = require('../../src/services/AuthService');
 describe('AuthService', () => {
   describe('login', () => {
     it('deve fazer login com credenciais válidas (admin)', () => {
-      const resultado = AuthService.login('admin', 'admin@123');
+      const resultado = AuthService.login('admin', process.env.ADMIN_PASSWORD || 'admin@123');
 
       expect(resultado).to.have.property('token');
       expect(resultado).to.have.property('usuario');
@@ -15,7 +15,7 @@ describe('AuthService', () => {
     });
 
     it('deve fazer login com credenciais válidas (user)', () => {
-      const resultado = AuthService.login('jonas.arruda', 'user@123');
+      const resultado = AuthService.login('jonas.arruda', process.env.USER_PASSWORD || 'user@123');
 
       expect(resultado).to.have.property('token');
       expect(resultado.usuario.usuario).to.equal('jonas.arruda');
@@ -44,14 +44,14 @@ describe('AuthService', () => {
       }).to.throw('Usuário e senha são obrigatórios');
 
       expect(() => {
-        AuthService.login('', 'admin@123');
+        AuthService.login('', process.env.ADMIN_PASSWORD || 'admin@123');
       }).to.throw('Usuário e senha são obrigatórios');
     });
   });
 
   describe('verificarToken', () => {
     it('deve verificar um token válido gerado pelo login', () => {
-      const resultado = AuthService.login('admin', 'admin@123');
+      const resultado = AuthService.login('admin', process.env.ADMIN_PASSWORD || 'admin@123');
       const payload = AuthService.verificarToken(resultado.token);
 
       expect(payload).to.have.property('id');

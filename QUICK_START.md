@@ -29,7 +29,7 @@ curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "usuario": "admin",
-    "senha": "admin@123"
+    "senha": "SUA_SENHA_AQUI"
   }'
 ```
 
@@ -158,8 +158,8 @@ npm run test:coverage
 
 | Usuário | Senha | Role |
 |---------|-------|------|
-| `admin` | `admin@123` | admin |
-| `jonas.arruda` | `user@123` | user |
+| `admin` | *(definida no .env como ADMIN_PASSWORD)* | admin |
+| `jonas.arruda` | *(definida no .env como USER_PASSWORD)* | user |
 
 ---
 

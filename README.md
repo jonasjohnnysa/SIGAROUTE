@@ -62,13 +62,13 @@ curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "usuario": "admin",
-    "senha": "admin@123"
+    "senha": "SUA_SENHA_AQUI"
   }'
 ```
 
 **Usuários Pré-definidos:**
-- `admin` / `admin@123` (role: admin)
-- `jonas.arruda` / `user@123` (role: user)
+- `admin` (senha definida no `.env` como `ADMIN_PASSWORD`)
+- `jonas.arruda` (senha definida no `.env` como `USER_PASSWORD`)
 
 **Response:**
 ```json
@@ -218,7 +218,7 @@ curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "usuario": "admin",
-    "senha": "admin@123"
+    "senha": "SUA_SENHA_AQUI"
   }'
 ```
 

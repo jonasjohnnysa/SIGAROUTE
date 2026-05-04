@@ -3,13 +3,20 @@ const bcrypt = require('bcryptjs');
 
 class AuthService {
   constructor() {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    const userPassword = process.env.USER_PASSWORD;
+
+    if (!adminPassword || !userPassword) {
+      throw new Error('As credenciais ADMIN_PASSWORD e USER_PASSWORD devem ser configuradas nas variáveis de ambiente.');
+    }
+
     // Usuários pré-definidos em memória
     this.usuarios = [
       {
         id: 1,
         usuario: 'admin',
         email: 'admin@sigaroute.com',
-        senhaHash: bcrypt.hashSync('admin@123', 10),
+        senhaHash: bcrypt.hashSync(adminPassword, 10),
         role: 'admin',
         ativo: true
       },
@@ -17,7 +24,7 @@ class AuthService {
         id: 2,
         usuario: 'jonas.arruda',
         email: 'jonas@sigaroute.com',
-        senhaHash: bcrypt.hashSync('user@123', 10),
+        senhaHash: bcrypt.hashSync(userPassword, 10),
         role: 'user',
         ativo: true
       }
