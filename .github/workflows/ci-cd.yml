@@ -145,6 +145,7 @@ jobs:
         run: npm ci --production
 
       - name: Deploy to remote server via SSH
+        if: ${{ env.SSH_HOST != '' && env.SSH_USERNAME != '' && env.SSH_PRIVATE_KEY != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.SSH_HOST }}
